@@ -91,7 +91,7 @@ class Api {
 export const api = new Api({
   baseUrl: "http://localhost:4000",
   headers: {
-    authorization: "9d9d46b1-d674-4200-a18f-5deb215f4e52",
     "Content-Type": "application/json",
+    authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
