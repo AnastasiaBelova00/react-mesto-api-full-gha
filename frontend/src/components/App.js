@@ -47,10 +47,46 @@ export default function App() {
     isInfoTooltipOpen ||
     selectedCard;
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([userInfo, cardInfo]) => {
+          setCurrentUser(userInfo);
+          setCards(cardInfo);
+        })
+        .catch((err) => {
+          console.error(`Ошибка: ${err}`);
+        });
+    }
+  }, [isLoggedIn]);
+
   //выход
   function logOut() {
     localStorage.removeItem("jwt");
     navigate("/signin");
+  }
+
+  //проверка токена
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  function checkToken() {
+    if (localStorage.getItem("jwt")) {
+      const jwt = localStorage.getItem("jwt");
+      auth
+        .getContent(jwt)
+        .then((data) => {
+          if (data) {
+            setLoggedIn(true);
+            navigate("/");
+            setUserData(data.data.email);
+          }
+        })
+        .catch(() => {
+          setLoggedIn(false);
+        });
+    }
   }
 
   //функция регистрации
@@ -58,9 +94,11 @@ export default function App() {
     auth
       .register(email, password)
       .then((data) => {
-        setRegistered(true);
-        setInfoTooltipOpen(true);
-        navigate("/signin");
+        if (data) {
+          setRegistered(true);
+          setInfoTooltipOpen(true);
+          navigate("/signin");
+        }
       })
       .catch((err) => {
         console.error(`Ошибка: ${err}`);
@@ -74,7 +112,7 @@ export default function App() {
     auth
       .authorize(email, password)
       .then((data) => {
-        if (data) {
+        if (data.token) {
           localStorage.setItem("jwt", data.token);
           setUserData(email);
           setLoggedIn(true);
@@ -85,41 +123,6 @@ export default function App() {
         console.error(`Ошибка: ${err}`);
       });
   }
-
-  //проверка токена
-  function checkToken() {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
-      if (jwt) {
-        auth
-          .getContent(jwt)
-          .then((data) => {
-            if (data) {
-              setLoggedIn(true);
-              setUserData(data.data.email);
-              navigate("/");
-            }
-          })
-          .catch((err) => {
-            setLoggedIn(false);
-          });
-      }
-    }
-  }
-  useEffect(() => {
-    checkToken();
-  }, []);
-
-  useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userInfo, cardInfo]) => {
-        setCurrentUser(userInfo);
-        setCards(cardInfo);
-      })
-      .catch((err) => {
-        console.error(`Ошибка: ${err}`);
-      });
-  }, []);
 
   // function handleEscClose(evt) {
   //   if (evt.key === "Escape") {
