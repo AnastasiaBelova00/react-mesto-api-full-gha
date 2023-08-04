@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3001";
+export const BASE_URL = "http://localhost:4000";
 
 //универсальная проверка запроса на сервер
 function checkStatus(res) {

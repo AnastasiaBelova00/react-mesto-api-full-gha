@@ -74,10 +74,12 @@ export default function App() {
     auth
       .authorize(email, password)
       .then((data) => {
-        localStorage.setItem("jwt", data.token);
-        setUserData(email);
-        setLoggedIn(true);
-        navigate("/");
+        if (data) {
+          localStorage.setItem("jwt", data.token);
+          setUserData(email);
+          setLoggedIn(true);
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.error(`Ошибка: ${err}`);
@@ -86,22 +88,24 @@ export default function App() {
 
   //проверка токена
   function checkToken() {
-    const jwt = localStorage.getItem("jwt");
-    auth
-      .getContent(jwt)
-      .then((data) => {
-        if (!data) {
-          return;
-        }
-        setLoggedIn(true);
-        setUserData(data.data.email);
-        navigate("/");
-      })
-      .catch((err) => {
-        setLoggedIn(false);
-      });
+    if (localStorage.getItem("jwt")) {
+      const jwt = localStorage.getItem("jwt");
+      if (jwt) {
+        auth
+          .getContent(jwt)
+          .then((data) => {
+            if (data) {
+              setLoggedIn(true);
+              setUserData(data.data.email);
+              navigate("/");
+            }
+          })
+          .catch((err) => {
+            setLoggedIn(false);
+          });
+      }
+    }
   }
-
   useEffect(() => {
     checkToken();
   }, []);
@@ -166,7 +170,7 @@ export default function App() {
   //лайк
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api

@@ -31,25 +31,27 @@ module.exports.getUserById = (req, res, next) => {
 
 // создание пользователя
 module.exports.createUser = (req, res, next) => {
-  const {
-    name, about, avatar, email, password
-  } = req.body;
+  const { name, about, avatar, email, password } = req.body;
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hash,
-    }))
-    .then((user) => res.status(201).send({
-      _id: user._id,
-      name: user.name,
-      about: user.about,
-      avatar: user.about,
-      email: user.email,
-    }))
+    .then((hash) =>
+      User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      })
+    )
+    .then((user) =>
+      res.status(201).send({
+        _id: user._id,
+        name: user.name,
+        about: user.about,
+        avatar: user.about,
+        email: user.email,
+      })
+    )
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы невалидные данные'));
@@ -117,7 +119,7 @@ module.exports.login = (req, res, next) => {
       });
 
       // вернём токен
-      res.status(200).send({ _id: token });
+      res.status(200).send({ token });
     })
     .catch(next);
 };
