@@ -6,7 +6,7 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
-// список всех пользователей
+// список пользователей
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send(users))
