@@ -108,5 +108,5 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: "http://localhost:4000",
+  baseUrl: "http://localhost:3001",
 });
