@@ -20,13 +20,20 @@ app.use(express.json());
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 // cors
-app.use(cors({ origin: 'http://localhost:3001' }));
+app.use(cors({ origin: 'https://nastasya.nomoreparties.co' }));
 
 // хелмет от уязвимостей
 app.use(helmet());
 
 // логгер запросов
 app.use(requestLogger);
+
+// краш-тест
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 // подключение роутов
 app.use(route);
