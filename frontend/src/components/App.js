@@ -64,6 +64,7 @@ export default function App() {
   function logOut() {
     localStorage.removeItem("jwt");
     navigate("/signin");
+    setLoggedIn(false);
   }
 
   //проверка токена
@@ -72,22 +73,37 @@ export default function App() {
   }, []);
 
   function checkToken() {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
       auth
         .getContent(jwt)
         .then((data) => {
-          if (data) {
-            setLoggedIn(true);
-            navigate("/");
-            setUserData(data.data.email);
-          }
+          setLoggedIn(true);
+          navigate("/");
+          setUserData(data.email);
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(`Ошибка: ${err}`);
           setLoggedIn(false);
         });
     }
   }
+
+  // if (localStorage.getItem("jwt")) {
+  //   const jwt = localStorage.getItem("jwt");
+  //   auth
+  //     .getContent(jwt)
+  //     .then((data) => {
+  //       if (data) {
+  //         setLoggedIn(true);
+  //         navigate("/");
+  //         setUserData(data.data.email);
+  //       }
+  //     })
+  //     .catch(() => {
+  //       setLoggedIn(false);
+  //     });
+  // }
 
   //функция регистрации
   function handleRegistration(email, password) {
