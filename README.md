@@ -10,7 +10,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 51.250.81.237
+IP 51.250.81.237
 
 Frontend https://nastasya.nomoreparties.co/
 
