@@ -20,7 +20,14 @@ app.use(express.json());
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 // cors
-app.use(cors({ origin: 'https://nastasya.nomoreparties.co' }));
+app.use(
+  cors({
+    origin: [
+      'https://nastasya.nomoreparties.co',
+      'http://nastasya.nomoreparties.co',
+    ],
+  })
+);
 
 // хелмет от уязвимостей
 app.use(helmet());
