@@ -22,10 +22,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // cors
 app.use(
   cors({
-    origin: [
-      'https://nastasya.nomoreparties.co',
-      'http://nastasya.nomoreparties.co',
-    ],
+    origin: ['https://nastasya.nomoreparties.co'],
   })
 );
 
@@ -35,12 +32,12 @@ app.use(helmet());
 // логгер запросов
 app.use(requestLogger);
 
-// краш-тест
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+// // краш-тест
+// app.get('/crash-test', () => {
+//   setTimeout(() => {
+//     throw new Error('Сервер сейчас упадёт');
+//   }, 0);
+// });
 
 // подключение роутов
 app.use(route);
