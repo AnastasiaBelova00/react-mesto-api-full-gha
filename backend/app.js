@@ -32,12 +32,12 @@ app.use(helmet());
 // логгер запросов
 app.use(requestLogger);
 
-// // краш-тест
-// app.get('/crash-test', () => {
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
-// });
+// краш-тест
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 // подключение роутов
 app.use(route);
